@@ -18,8 +18,13 @@
 ### 1. 개선 사항
 - 미션 진행 중 **지역 정보(Location)** 를 별도의 테이블로 분리해야 한다는 필요성을 깨달음.
 - 회원과 가게 모두 지역과 연관 관계를 가짐.
-- 이에 따라 ERD를 수정.
+- 음식 카테고리와 가게 연관 관계를 가짐.
+- 문의와 리뷰의 사진 속성이 다중 값을 가질 수 있어 별도의 테이블로 분리함.
+- 리뷰 답글과 문의 답글 테이블을 새로 생성함
+- 영업시간 정보를 관리하기 위해 영업시간 테이블을 추가함
+- 이에 따라 ERD를 수정함.
 
+![img_2.png](img_2.png)
 
 ---
 
@@ -66,6 +71,7 @@ WHERE id = '로그인한_사용자_id';
 SELECT 미션.point,
        미션수행.status,
        가게.name,
+       가게.id,
        미션.content,
        DATEDIFF(미션.date, NOW()) AS days_left
 FROM 미션수행
@@ -81,7 +87,8 @@ ORDER BY days_left ASC
 ```sql
 SELECT 가게.name,
        미션.content,
-       미션.point
+       미션.point,
+       미션.id
 FROM 미션
          JOIN 가게   ON 미션.shop_id = 가게.id
          JOIN 지역   ON 가게.location_id = 지역.id
@@ -96,15 +103,18 @@ ORDER BY 미션.id ASC
 ```sql
 SELECT 가게.name,
        미션.content,
-       미션.point
+       미션.point,
+       미션.id
 FROM 미션
          JOIN 가게   ON 미션.shop_id = 가게.id
          JOIN 지역   ON 가게.location_id = 지역.id
          JOIN 회원   ON 지역.id = 회원.location_id
 WHERE 회원.id = '로그인한_사용자_id'
-  AND 미션.id > 10
-ORDER BY 미션.id ASC
-    LIMIT 10;
+  AND 미션.deadline > :deadline 
+	OR (미션.deadline = :deadline AND 미션.mission_id > :mission_id) 
+ORDER BY deadline ASC, mission_id ASC
+    LIMIT 10
+
 
 
 ```
