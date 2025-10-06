@@ -167,4 +167,3 @@ private long id;
 *   IDENTITY = “학생이 등록할 때, 바로 DB가 출석 번호를 붙여주는 것” → MySQL, AUTO_INCREMENT
 *   SEQUENCE = “학교에서 미리 번호표를 만들어서 학생에게 나눠주는 것” → Oracle, PostgreSQL 시퀀스
 *   TABLE = “학교에 번호표를 보관하는 전용 상자를 두고, 학생이 등록할 때 상자에서 하나씩 꺼내서 번호를 붙이는 것” → 번호를 한 명씩 꺼내서 사용하고, 상자에 기록 업데이트.
-```
